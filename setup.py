@@ -29,6 +29,7 @@ config = {
     'jack-midi':    True,
     'c++11':        False,
     'debug':        True,
+    'akai_fix':     True
 }
 
 include_dirs = []
@@ -87,7 +88,7 @@ def pkgconfig(name):
     """
     status, output = getstatusoutput('pkg-config --libs --cflags %s' % name)
     if status:
-        sys.exit("couldn't find package '%s'" % name)
+        sys.exit("couldn't find package '%s' (status: %s)" % (name, status))
     for token in output.split():
         opt, val = token[:2], token[2:]
         if opt == '-I':
@@ -173,6 +174,9 @@ if config['c++11']:
     extra_compile_args.append('-std=c++0x')
 else:
     pkgconfig('glib-2.0')
+
+if config['akai_fix']:
+    define_macros.append(('AKAI_FIX', 1))
 
 
 setup(

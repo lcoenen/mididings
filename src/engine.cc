@@ -392,10 +392,12 @@ bool Engine::sanitize_event(MidiEvent & ev) const
             }
             ev.note.velocity = std::max(0, std::min(127, ev.note.velocity));
 
+#ifndef AKAI_FIX
             if (ev.type == MIDI_EVENT_NOTEON && ev.note.velocity < 1) {
                 return false;
             }
             return true;
+#endif
         case MIDI_EVENT_CTRL:
             if (ev.ctrl.param < 0 || ev.ctrl.param > 127) {
                 if (_verbose) {
